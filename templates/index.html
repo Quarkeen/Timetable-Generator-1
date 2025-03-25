@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload & Define 24h Slots</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script>
+    // Dynamically generate input fields for lecture, tutorial, lab, minor
+    function generateSlotFields(slotType) {
+      let num = document.getElementById('num_' + slotType + '_slots').value;
+      let container = document.getElementById(slotType + '_slots_container');
+      container.innerHTML = ''; // Clear
+      for (let i = 1; i <= num; i++) {
+        let div = document.createElement('div');
+        div.className = 'mb-2';
+        div.innerHTML = `<label class="form-label">${slotType.charAt(0).toUpperCase() + slotType.slice(1)} Slot ${i} (e.g. 09:00 - 10:30):</label>
+                         <input type="text" name="${slotType}_slot_${i}" class="form-control" required>`;
+        container.appendChild(div);
+      }
+    }
+
+    function onLoad() {
+      generateSlotFields('lecture');
+      generateSlotFields('tutorial');
+      generateSlotFields('lab');
+      generateSlotFields('minor');
+    }
+  </script>
+</head>
+<body onload="onLoad()">
+
+<div class="container my-4">
+  <h1 class="mb-4">Upload Course Structure & Define Slots (24-hour format)</h1>
+  <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data" class="row g-3">
+    
+    <!-- File Upload -->
+    <div class="col-md-6">
+      <label class="form-label">Select Excel File</label>
+      <input type="file" name="excel_file" class="form-control" required>
+    </div>
+    
+    <!-- Basic Info -->
+    <div class="col-md-6">
+      <label class="form-label">Academic Year</label>
+      <input type="text" name="academic_year" class="form-control" value="Jan - April 2025">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Semester</label>
+      <input type="text" name="semester" class="form-control" value="IV">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Classroom</label>
+      <input type="text" name="classroom" class="form-control" value="C104">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Branch</label>
+      <input type="text" name="branch" class="form-control" value="CSE">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Group Mail</label>
+      <input type="text" name="group_mail" class="form-control" value="2023csea@iiitdwd.ac.in">
+    </div>
+
+    <hr class="my-4">
+
+    <!-- Break Times -->
+    <div class="col-md-6">
+      <label class="form-label">Morning Break (e.g. 10:30 - 11:00)</label>
+      <input type="text" name="morning_break" class="form-control" value="10:30 - 11:00">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Lunch Break (e.g. 13:30 - 14:30)</label>
+      <input type="text" name="lunch_break" class="form-control" value="13:30 - 14:30">
+    </div>
+
+    <hr class="my-4">
+
+    <!-- Lecture Slots -->
+    <div class="col-12">
+      <label class="form-label">Number of Lecture Slots per Day</label>
+      <input type="number" id="num_lecture_slots" name="num_lecture_slots" class="form-control" value="2" min="0"
+             onchange="generateSlotFields('lecture')">
+    </div>
+    <div class="col-12" id="lecture_slots_container"></div>
+
+    <hr class="my-4">
+
+    <!-- Tutorial Slots -->
+    <div class="col-12">
+      <label class="form-label">Number of Tutorial Slots per Day</label>
+      <input type="number" id="num_tutorial_slots" name="num_tutorial_slots" class="form-control" value="1" min="0"
+             onchange="generateSlotFields('tutorial')">
+    </div>
+    <div class="col-12" id="tutorial_slots_container"></div>
+
+    <hr class="my-4">
+
+    <!-- Lab Slots -->
+    <div class="col-12">
+      <label class="form-label">Number of Lab Slots per Day</label>
+      <input type="number" id="num_lab_slots" name="num_lab_slots" class="form-control" value="1" min="0"
+             onchange="generateSlotFields('lab')">
+    </div>
+    <div class="col-12" id="lab_slots_container"></div>
+
+    <hr class="my-4">
+
+    <!-- Minor Slots -->
+    <div class="col-12">
+      <label class="form-label">Number of Minor Slots per Day</label>
+      <input type="number" id="num_minor_slots" name="num_minor_slots" class="form-control" value="0" min="0"
+             onchange="generateSlotFields('minor')">
+    </div>
+    <div class="col-12" id="minor_slots_container"></div>
+
+    <hr class="my-4">
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Upload and Generate Timetable</button>
+    </div>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
